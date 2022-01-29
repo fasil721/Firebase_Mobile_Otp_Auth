@@ -1,19 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_otp_verification_firebase/welcome_page.dart';
 
 void main() {
   runApp(
-    const MaterialApp(
-      home: MyApp(),
+    MaterialApp(
+      home: Welcome(),
       debugShowCheckedModeBanner: false,
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container();
-  }
-}
