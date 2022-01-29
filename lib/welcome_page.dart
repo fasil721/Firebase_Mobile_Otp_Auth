@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_otp_verification_firebase/register_page.dart';
 
 class Welcome extends StatelessWidget {
   @override
@@ -50,9 +51,9 @@ class Welcome extends StatelessWidget {
                       width: double.infinity,
                       child: ElevatedButton(
                         onPressed: () {
-                          // Navigator.of(context).push(
-                          //   MaterialPageRoute(builder: (context) => Register()),
-                          // );
+                          Navigator.of(context).push(
+                            MaterialPageRoute(builder: (context) => Register()),
+                          );
                         },
                         style: ButtonStyle(
                           foregroundColor:
