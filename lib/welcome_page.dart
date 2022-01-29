@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_otp_verification_firebase/register_page.dart';
+import 'package:mobile_otp_verification_firebase/registeration_page.dart';
 
 class Welcome extends StatelessWidget {
   @override
