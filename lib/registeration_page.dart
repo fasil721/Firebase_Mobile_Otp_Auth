@@ -1,9 +1,63 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mobile_otp_verification_firebase/otp_page.dart';
 
-class Register extends StatelessWidget {
+class Register extends StatefulWidget {
+  @override
+  State<Register> createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
   final textController = TextEditingController();
+
+  final auth = FirebaseAuth.instance;
+  Future<void> verifyPhoneNumber() async {
+    try {
+      await auth.verifyPhoneNumber(
+        timeout: const Duration(seconds: 60),
+        phoneNumber: "+91 ${textController.text}",
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await auth.signInWithCredential(credential).then((value) {
+            print("You are logged in successfully");
+          });
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          Fluttertoast.showToast(msg: e.toString());
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          setState(() {});
+        },
+        codeAutoRetrievalTimeout: (String verificationID) {
+          Fluttertoast.showToast(msg: "Time out");
+        },
+      );
+    } catch (e) {
+      Fluttertoast.showToast(msg: e.toString());
+    }
+  }
+
+  // void verifyOTP() async {
+
+  //   PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationID, smsCode: otpController.text);
+
+  //   await auth.signInWithCredential(credential).then((value){
+  //     print("You are logged in successfully");
+  //     Fluttertoast.showToast(
+  //         msg: "You are logged in successfully",
+  //         toastLength: Toast.LENGTH_SHORT,
+  //         gravity: ToastGravity.CENTER,
+  //         timeInSecForIosWeb: 1,
+  //         backgroundColor: Colors.red,
+  //         textColor: Colors.white,
+  //         fontSize: 16.0
+  //     );
+  //   });
+  // }
+
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
@@ -131,12 +185,12 @@ class Register extends StatelessWidget {
                             width: double.infinity,
                             child: ElevatedButton(
                               onPressed: () {
-                                if (kDebugMode) {
-                                  print(textController.text);
-                                }
-                                // Navigator.of(context).push(
-                                //   MaterialPageRoute(builder: (context) => Otp()),
-                                // );
+                                // verifyPhoneNumber();
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const Otp(),
+                                  ),
+                                );
                               },
                               style: ButtonStyle(
                                 foregroundColor:
