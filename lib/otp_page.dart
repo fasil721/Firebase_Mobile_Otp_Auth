@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile_otp_verification_firebase/configaration.dart';
-import 'package:mobile_otp_verification_firebase/home_page.dart';
 import 'package:otp_text_field/otp_text_field.dart';
 import 'package:otp_text_field/style.dart';
 
@@ -16,6 +15,7 @@ class Otp extends StatefulWidget {
 class _OtpState extends State<Otp> {
   final otpController = OtpFieldController();
   String otp = "";
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -62,7 +62,7 @@ class _OtpState extends State<Otp> {
                     fit: BoxFit.fill,
                   ),
                 ),
-                const SizedBox(height: 24),
+                SizedBox(height: height * 0.03),
                 const Text(
                   'Verification',
                   style: TextStyle(
@@ -70,7 +70,7 @@ class _OtpState extends State<Otp> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: height * 0.02),
                 const Text(
                   "Enter your OTP code number",
                   style: TextStyle(
@@ -80,7 +80,7 @@ class _OtpState extends State<Otp> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 28),
+                SizedBox(height: height * 0.03),
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 28),
                   decoration: BoxDecoration(
@@ -89,29 +89,13 @@ class _OtpState extends State<Otp> {
                   ),
                   child: Column(
                     children: [
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //   children: [
-                      //     _textFieldOTP(first: true, last: false),
-                      //     const SizedBox(width: 5),
-                      //     _textFieldOTP(first: false, last: false),
-                      //     const SizedBox(width: 5),
-                      //     _textFieldOTP(first: false, last: false),
-                      //     const SizedBox(width: 5),
-                      //     _textFieldOTP(first: false, last: false),
-                      //     const SizedBox(width: 5),
-                      //     _textFieldOTP(first: false, last: false),
-                      //     const SizedBox(width: 5),
-                      //     _textFieldOTP(first: false, last: true),
-                      //   ],
-                      // ),
                       SizedBox(
-                        height: 45,
+                        height: height * 0.06,
                         child: OTPTextField(
                           length: 6,
                           width: MediaQuery.of(context).size.width * 0.9,
                           textFieldAlignment: MainAxisAlignment.spaceEvenly,
-                          fieldWidth: 45,
+                          fieldWidth: width * 0.1146,
                           otpFieldStyle: OtpFieldStyle(),
                           fieldStyle: FieldStyle.box,
                           keyboardType: TextInputType.phone,
@@ -120,29 +104,34 @@ class _OtpState extends State<Otp> {
                             fontSize: 18,
                             color: Colors.black,
                           ),
-                          onChanged: (pin) {},
+                          onChanged: (pin) {
+                            otp = pin;
+                          },
                           onCompleted: (pin) {
-                            print("Completed: $pin");
                             otp = pin;
                           },
                         ),
                       ),
-                      const SizedBox(
-                        height: 22,
-                      ),
+                      SizedBox(height: height * 0.025),
                       Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         width: double.infinity,
+                        height: 45,
                         child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             final regex = RegExp(r'^.{6}$');
                             if (otp.isEmpty) {
                               Fluttertoast.showToast(
                                 msg: "Enter otp",
                               );
                             } else if (regex.hasMatch(otp)) {
-                              verifyOTP(otp, context);
-                              // print("object");
+                              setState(() {
+                                isLoading = true;
+                              });
+                              await verifyOTP(otp, context);
+                              setState(() {
+                                isLoading = false;
+                              });
                             } else {
                               Fluttertoast.showToast(
                                 msg: "Enter Valid otp",
@@ -162,21 +151,25 @@ class _OtpState extends State<Otp> {
                               ),
                             ),
                           ),
-                          child: const Padding(
-                            padding: EdgeInsets.all(14.0),
-                            child: Text(
-                              'Verify',
-                              style: TextStyle(fontSize: 16),
-                            ),
-                          ),
+                          child: isLoading
+                              ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const Text(
+                                  'Verify',
+                                  style: TextStyle(fontSize: 16),
+                                ),
                         ),
                       )
                     ],
                   ),
                 ),
-                const SizedBox(
-                  height: 18,
-                ),
+                SizedBox(height: height * 0.02),
                 const Text(
                   "Didn't you receive any code?",
                   style: TextStyle(
@@ -186,9 +179,7 @@ class _OtpState extends State<Otp> {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(
-                  height: 18,
-                ),
+                SizedBox(height: height * 0.025),
                 const Text(
                   "Resend New Code",
                   style: TextStyle(

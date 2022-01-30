@@ -14,7 +14,7 @@ class _RegisterState extends State<Register> {
   final textController = TextEditingController();
   final auth = FirebaseAuth.instance;
   String verificationId = "";
-
+  bool isLoading = false;
   @override
   void dispose() {
     SystemChannels.textInput.invokeMethod("TextInput.hide");
@@ -25,7 +25,6 @@ class _RegisterState extends State<Register> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    final textFactor = MediaQuery.textScaleFactorOf(context);
     return Scaffold(
       resizeToAvoidBottomInset: true,
       backgroundColor: const Color(0xfff7f6fb),
@@ -69,18 +68,18 @@ class _RegisterState extends State<Register> {
                             ),
                           ),
                           SizedBox(height: height * 0.025),
-                          Text(
+                          const Text(
                             'Registration',
                             style: TextStyle(
-                              fontSize: textFactor * 22,
+                              fontSize: 22,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           SizedBox(height: height * 0.02),
-                          Text(
+                          const Text(
                             "Add your phone number. we'll send you a verification code so we know you're real",
                             style: TextStyle(
-                              fontSize: textFactor * 14,
+                              fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: Colors.black38,
                             ),
@@ -101,11 +100,11 @@ class _RegisterState extends State<Register> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          TextFormField(
+                          TextField(
                             controller: textController,
                             keyboardType: TextInputType.number,
-                            style: TextStyle(
-                              fontSize: textFactor * 17,
+                            style: const TextStyle(
+                              fontSize: 17,
                               fontWeight: FontWeight.bold,
                             ),
                             decoration: InputDecoration(
@@ -119,13 +118,12 @@ class _RegisterState extends State<Register> {
                                     const BorderSide(color: Colors.black12),
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              prefix: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 5),
+                              prefix: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 5),
                                 child: Text(
                                   '(+91)',
                                   style: TextStyle(
-                                    fontSize: textFactor * 16,
+                                    fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -134,18 +132,26 @@ class _RegisterState extends State<Register> {
                           ),
                           SizedBox(height: height * .025),
                           SizedBox(
+                            height: 45,
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 final regex = RegExp(r'^.{10}$');
-                                if (!regex.hasMatch(textController.text)) {
-                                  Fluttertoast.showToast(
-                                    msg: "Enter Valid PhoneNumber",
-                                  );
-                                } else {
-                                  verifyPhoneNumber(
+                                if (regex.hasMatch(textController.text)) {
+                                  setState(() {
+                                    isLoading = true;
+                                  });
+
+                                  await verifyPhoneNumber(
                                     textController.text,
                                     context,
+                                  );
+                                  setState(() {
+                                    isLoading = false;
+                                  });
+                                } else {
+                                  Fluttertoast.showToast(
+                                    msg: "Enter Valid PhoneNumber",
                                   );
                                 }
                               },
@@ -165,13 +171,19 @@ class _RegisterState extends State<Register> {
                                   ),
                                 ),
                               ),
-                              child: const Padding(
-                                padding: EdgeInsets.all(14.0),
-                                child: Text(
-                                  'Send',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ),
+                              child: isLoading
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : const Text(
+                                      'Send',
+                                      style: TextStyle(fontSize: 16),
+                                    ),
                             ),
                           )
                         ],

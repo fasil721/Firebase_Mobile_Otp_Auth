@@ -1,4 +1,3 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -8,7 +7,12 @@ import 'package:mobile_otp_verification_firebase/otp_page.dart';
 String verificationId = "";
 final auth = FirebaseAuth.instance;
 
+Future delay(BuildContext context) async {
+  await Future.delayed(const Duration(seconds: 3));
+}
+
 Future verifyOTP(String otp, BuildContext context) async {
+   await Future.delayed(const Duration(seconds: 2));
   final credential = PhoneAuthProvider.credential(
     verificationId: verificationId,
     smsCode: otp,
@@ -34,6 +38,7 @@ Future verifyOTP(String otp, BuildContext context) async {
 }
 
 Future verifyPhoneNumber(String phoneNumber, BuildContext context) async {
+  await Future.delayed(const Duration(seconds: 2));
   try {
     auth.verifyPhoneNumber(
       timeout: const Duration(seconds: 60),
