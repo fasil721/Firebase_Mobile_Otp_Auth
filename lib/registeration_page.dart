@@ -1,9 +1,9 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:mobile_otp_verification_firebase/configaration.dart';
 import 'package:mobile_otp_verification_firebase/otp_page.dart';
 
 class Register extends StatefulWidget {
@@ -13,50 +13,14 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
   final textController = TextEditingController();
-
   final auth = FirebaseAuth.instance;
-  Future<void> verifyPhoneNumber() async {
-    try {
-      await auth.verifyPhoneNumber(
-        timeout: const Duration(seconds: 60),
-        phoneNumber: "+91 ${textController.text}",
-        verificationCompleted: (PhoneAuthCredential credential) async {
-          await auth.signInWithCredential(credential).then((value) {
-            print("You are logged in successfully");
-          });
-        },
-        verificationFailed: (FirebaseAuthException e) {
-          Fluttertoast.showToast(msg: e.toString());
-        },
-        codeSent: (String verificationId, int? resendToken) {
-          setState(() {});
-        },
-        codeAutoRetrievalTimeout: (String verificationID) {
-          Fluttertoast.showToast(msg: "Time out");
-        },
-      );
-    } catch (e) {
-      Fluttertoast.showToast(msg: e.toString());
-    }
+  String verificationId = "";
+
+  @override
+  void dispose() {
+    SystemChannels.textInput.invokeMethod("TextInput.hide");
+    super.dispose();
   }
-
-  // void verifyOTP() async {
-
-  //   PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationID, smsCode: otpController.text);
-
-  //   await auth.signInWithCredential(credential).then((value){
-  //     print("You are logged in successfully");
-  //     Fluttertoast.showToast(
-  //         msg: "You are logged in successfully",
-  //         toastLength: Toast.LENGTH_SHORT,
-  //         gravity: ToastGravity.CENTER,
-  //         timeInSecForIosWeb: 1,
-  //         backgroundColor: Colors.red,
-  //         textColor: Colors.white,
-  //         fontSize: 16.0
-  //     );
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +69,7 @@ class _RegisterState extends State<Register> {
                               fit: BoxFit.fill,
                             ),
                           ),
-                          SizedBox(
-                            height: height * 0.025,
-                          ),
+                          SizedBox(height: height * 0.025),
                           Text(
                             'Registration',
                             style: TextStyle(
@@ -115,9 +77,7 @@ class _RegisterState extends State<Register> {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
-                          SizedBox(
-                            height: height * 0.02,
-                          ),
+                          SizedBox(height: height * 0.02),
                           Text(
                             "Add your phone number. we'll send you a verification code so we know you're real",
                             style: TextStyle(
@@ -171,26 +131,32 @@ class _RegisterState extends State<Register> {
                                   ),
                                 ),
                               ),
-                              suffixIcon: const Icon(
-                                Icons.check_circle,
-                                color: Colors.green,
-                                size: 24,
-                              ),
+                              // suffixIcon: const Icon(
+                              //   Icons.check_circle,
+                              //   color: Colors.green,
+                              //   size: 24,
+                              // ),
                             ),
                           ),
-                          SizedBox(
-                            height: height * .025,
-                          ),
+                          SizedBox(height: height * .025),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: () {
-                                // verifyPhoneNumber();
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => const Otp(),
-                                  ),
-                                );
+                              onPressed: ()  {
+                                final regex = RegExp(r'^.{10}$');
+                                if (!regex.hasMatch(textController.text)) {
+                                  Fluttertoast.showToast(
+                                    msg: "Enter Valid PhoneNumber",
+                                  );
+                                } else {
+                                  verifyPhoneNumber(textController.text).then(
+                                    (value) => Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                        builder: (context) => const Otp(),
+                                      ),
+                                    ),
+                                  );
+                                }
                               },
                               style: ButtonStyle(
                                 foregroundColor:
