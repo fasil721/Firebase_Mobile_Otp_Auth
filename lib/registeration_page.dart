@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile_otp_verification_firebase/configaration.dart';
-import 'package:mobile_otp_verification_firebase/otp_page.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -131,30 +130,22 @@ class _RegisterState extends State<Register> {
                                   ),
                                 ),
                               ),
-                              // suffixIcon: const Icon(
-                              //   Icons.check_circle,
-                              //   color: Colors.green,
-                              //   size: 24,
-                              // ),
                             ),
                           ),
                           SizedBox(height: height * .025),
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
-                              onPressed: ()  {
+                              onPressed: () {
                                 final regex = RegExp(r'^.{10}$');
                                 if (!regex.hasMatch(textController.text)) {
                                   Fluttertoast.showToast(
                                     msg: "Enter Valid PhoneNumber",
                                   );
                                 } else {
-                                  verifyPhoneNumber(textController.text).then(
-                                    (value) => Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder: (context) => const Otp(),
-                                      ),
-                                    ),
+                                  verifyPhoneNumber(
+                                    textController.text,
+                                    context,
                                   );
                                 }
                               },

@@ -1,7 +1,9 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobile_otp_verification_firebase/home_page.dart';
+import 'package:mobile_otp_verification_firebase/otp_page.dart';
 
 String verificationId = "";
 final auth = FirebaseAuth.instance;
@@ -11,35 +13,48 @@ Future verifyOTP(String otp, BuildContext context) async {
     verificationId: verificationId,
     smsCode: otp,
   );
-  await auth.signInWithCredential(credential).then((value) {
+  try {
+    await auth.signInWithCredential(credential);
     Fluttertoast.showToast(
       msg: "You are logged in successfully",
-    );
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const HomePage(),
+    ).then(
+      (value) => Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ),
+        (route) => false,
       ),
     );
-  });
+  } on FirebaseAuthException catch (e) {
+    Fluttertoast.showToast(msg: e.code);
+  } catch (e) {
+    Fluttertoast.showToast(msg: "catch----$e");
+  }
 }
 
-Future<void> verifyPhoneNumber(String phoneNumber) async {
+Future verifyPhoneNumber(String phoneNumber, BuildContext context) async {
   try {
-    await auth.verifyPhoneNumber(
+    auth.verifyPhoneNumber(
       timeout: const Duration(seconds: 60),
       phoneNumber: "+91 $phoneNumber",
       verificationCompleted: (PhoneAuthCredential credential) async {
         await auth.signInWithCredential(credential).then((value) {});
       },
-      verificationFailed: (FirebaseAuthException e) {
-        Fluttertoast.showToast(msg: e.toString());
+      verificationFailed: (FirebaseAuthException err) {
+        Fluttertoast.showToast(msg: err.code);
       },
       codeSent: (String verificationid, int? resendToken) {
         verificationId = verificationid;
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const Otp(),
+          ),
+        );
       },
       codeAutoRetrievalTimeout: (String verificationID) {},
     );
-  } catch (e) {
-    Fluttertoast.showToast(msg: e.toString());
+  } on FirebaseAuthException catch (err) {
+    Fluttertoast.showToast(msg: err.code);
   }
 }
