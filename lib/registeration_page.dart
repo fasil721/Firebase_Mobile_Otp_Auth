@@ -14,7 +14,6 @@ class _RegisterState extends State<Register> {
   final textController = TextEditingController();
   final auth = FirebaseAuth.instance;
   String verificationId = "";
-  bool isLoading = false;
   @override
   void dispose() {
     SystemChannels.textInput.invokeMethod("TextInput.hide");
@@ -138,10 +137,11 @@ class _RegisterState extends State<Register> {
                               onPressed: () async {
                                 final regex = RegExp(r'^.{10}$');
                                 if (regex.hasMatch(textController.text)) {
+                                  SystemChannels.textInput
+                                      .invokeMethod("TextInput.hide");
                                   setState(() {
                                     isLoading = true;
                                   });
-
                                   await verifyPhoneNumber(
                                     textController.text,
                                     context,

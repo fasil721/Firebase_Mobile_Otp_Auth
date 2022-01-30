@@ -52,7 +52,7 @@ class _OtpState extends State<Otp> {
             child: Column(
               children: [
                 Container(
-                  width: width * 0.5,
+                  width: width * 0.7,
                   decoration: BoxDecoration(
                     color: Colors.deepPurple.shade50,
                     borderRadius: BorderRadius.circular(10),
@@ -165,30 +165,11 @@ class _OtpState extends State<Otp> {
                                   style: TextStyle(fontSize: 16),
                                 ),
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ),
-                SizedBox(height: height * 0.02),
-                const Text(
-                  "Didn't you receive any code?",
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black38,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(height: height * 0.025),
-                const Text(
-                  "Resend New Code",
-                  style: TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xff14B8A6),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+                SizedBox(height: height * 0.05),
               ],
             ),
           ),
