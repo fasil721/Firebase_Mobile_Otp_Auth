@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_otp_verification_firebase/registeration_page.dart';
 
@@ -14,99 +15,104 @@ class Welcome extends StatelessWidget {
             children: [
               Expanded(
                 flex: 3,
-                child: Image.asset(
-                  'assets/Welcome-bro.png',
+                child: FadeInDown(
+                  child: Image.asset(
+                    'assets/Welcome-bro.png',
+                  ),
                 ),
               ),
               Expanded(
                 flex: 2,
-                child: Column(
-                  children: [
-                    const SizedBox(
-                      height: 18,
-                    ),
-                    const Text(
-                      "Let's get started",
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                child: FadeInUp(
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 18,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Text(
-                      "Never a better time than now to start.",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black38,
+                      const Text(
+                        "Let's get started",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(
-                      height: 38,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (context) => Register()),
-                          );
-                        },
-                        style: ButtonStyle(
-                          foregroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          backgroundColor: MaterialStateProperty.all<Color>(
-                            const Color(0xff14B8A6),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Text(
+                        "Never a better time than now to start.",
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black38,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(
+                        height: 38,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => Register()),
+                            );
+                          },
+                          style: ButtonStyle(
+                            foregroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                              const Color(0xff14B8A6),
+                            ),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24.0),
+                              ),
+                            ),
                           ),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24.0),
+                          child: const Padding(
+                            padding: EdgeInsets.all(14.0),
+                            child: Text(
+                              'Create Account',
+                              style: TextStyle(fontSize: 16),
                             ),
                           ),
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(14.0),
-                          child: Text(
-                            'Create Account',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 22,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                          foregroundColor: MaterialStateProperty.all<Color>(
-                            const Color(0xff14B8A6),
+                      const SizedBox(
+                        height: 22,
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {},
+                          style: ButtonStyle(
+                            foregroundColor: MaterialStateProperty.all<Color>(
+                              const Color(0xff14B8A6),
+                            ),
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(Colors.white),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24.0),
+                              ),
+                            ),
                           ),
-                          backgroundColor:
-                              MaterialStateProperty.all<Color>(Colors.white),
-                          shape:
-                              MaterialStateProperty.all<RoundedRectangleBorder>(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(24.0),
+                          child: const Padding(
+                            padding: EdgeInsets.all(14.0),
+                            child: Text(
+                              'Login',
+                              style: TextStyle(fontSize: 16),
                             ),
                           ),
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(14.0),
-                          child: Text(
-                            'Login',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               )
             ],
